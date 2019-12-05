@@ -1,0 +1,39 @@
+// The contact book service definition.
+syntax = "proto3";
+service ContactBook {
+  rpc Save (Contact) returns (SaveReply) {}
+  rpc Load(ID) returns (LoadReply) {}
+  rpc ListByPhone(Phone) returns (ListReply) {}
+  rpc Delete(ID) returns(DeleteReply) {}
+}
+
+// The request message containing contacts data
+message Contact {
+  int64 id = 1;
+  string phone = 2;
+  string  first_name= 3;
+  string  last_name= 4;
+}
+
+message ID {
+  int64 id = 1;
+}
+
+message Phone {
+  string phone = 1;
+}
+
+message ListReply {
+  repeated Contact people = 1;
+}
+
+// The response message on save actiob
+message SaveReply {
+  int64 id = 1;
+}
+message LoadReply {
+  Contact people = 1;
+}
+message DeleteReply {
+  string status = 1;
+}
