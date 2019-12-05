@@ -4,7 +4,7 @@ service ContactBook {
   rpc Save (Contact) returns (SaveReply) {}
   rpc Load(ID) returns (LoadReply) {}
   rpc ListByPhone(Phone) returns (ListReply) {}
-  rpc Delete(ID) returns(DeleteReply) {}
+  rpc Delete(ID) returns(Empty) {}
 }
 
 // The request message containing contacts data
@@ -36,4 +36,7 @@ message LoadReply {
 }
 message DeleteReply {
   string status = 1;
+}
+message Empty {
+
 }

@@ -5,18 +5,12 @@ import (
 	"log"
 	"net"
 
-	//"google.golang.org/grpc"
-	//"google.golang.org/grpc/reflection"
-	//
-	//"github.com/wshaman/stub_contacts"
-	//"github.com/wshaman/web_practice/grpc/conv"
-	//proto "github.com/wshaman/web_practice/grpc/proto"
-
-	"github.com/wshaman/stub_contacts"
-	"github.com/wshaman/web_practice/grpc/conv"
-	"github.com/wshaman/web_practice/grpc/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+
+	"github.com/wshaman/stub_contacts"
+	"github.com/wshaman/web_practice/grpc/common/conv"
+	"github.com/wshaman/web_practice/grpc/common/proto"
 )
 
 type service struct {
@@ -47,7 +41,13 @@ func (s *service) Save(_ context.Context, in *proto.Contact) (*proto.SaveReply, 
 }
 
 func (s *service) ListByPhone(_ context.Context, req *proto.Phone) (*proto.ListReply, error) {
-	list, err := s.repo.FindByPhone(req.Phone)
+	var list []stub_contacts.Contact
+	var err error
+	if req.Phone == "" {
+		list, err = s.repo.List()
+	} else {
+		list, err = s.repo.FindByPhone(req.Phone)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,6 @@ func (s *service) ListByPhone(_ context.Context, req *proto.Phone) (*proto.ListR
 
 func main() {
 
-	// Стартуем наш gRPC сервер для прослушивания tcp
 	tcp, err := net.Listen("tcp", ":8082")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
